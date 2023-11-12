@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34221.43
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AKMDotNetCoreConsoleApp", "AKMDotNetCoreConsoleApp\AKMDotNetCoreConsoleApp.csproj", "{C0A4C267-F5BF-494C-8AC3-478E0707C36B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C0A4C267-F5BF-494C-8AC3-478E0707C36B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0A4C267-F5BF-494C-8AC3-478E0707C36B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0A4C267-F5BF-494C-8AC3-478E0707C36B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0A4C267-F5BF-494C-8AC3-478E0707C36B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BEDE2B0A-C0E0-487D-A754-6458E7911C5C}
+	EndGlobalSection
+EndGlobal
