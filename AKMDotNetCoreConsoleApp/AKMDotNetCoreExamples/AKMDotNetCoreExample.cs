@@ -4,14 +4,22 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
+using System.Reflection.Metadata;
 
 namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
 {
     public class AKMDotNetCoreExample
     {
 
-        public void Read()
+        public void Run()
+        {
+            Read();
+            Create("Moe Moe Inya", "Inya", "Hello World!");
+        }
+
+        private void Read()
         {
             #region Read / Retrieve
             SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder()
@@ -43,6 +51,38 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
                 Console.WriteLine(row["Blog_Author"]);
                 Console.WriteLine(row["Blog_Content"]);
             }
+            #endregion
+        }
+
+        private void Create(string title, string author, string content)
+        {
+            #region Create
+            SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder()
+            {
+                DataSource = ".", //server name
+                InitialCatalog = "AKMDotNetCore", //database name
+                UserID = "sa",
+                Password = "sa@123",
+            };
+            SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString);
+            connection.Open();
+             string query = @"INSERT INTO [dbo].[Tbl_Blog]
+           ([Blog_Title]
+           ,[Blog_Author]
+           ,[Blog_Content])
+     VALUES
+           (@Blog_Title
+           ,@Blog_Author
+           ,@Blog_Content)";
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@Blog_Title", title);
+            cmd.Parameters.AddWithValue("@Blog_Author", author);
+            cmd.Parameters.AddWithValue("@Blog_Content", content);
+            int result = cmd.ExecuteNonQuery();
+
+            connection.Close();
+            string message = result > 0 ? "Saving Successfully!" : "Saving Failed!";
+            Console.WriteLine(message);
             #endregion
         }
     }
