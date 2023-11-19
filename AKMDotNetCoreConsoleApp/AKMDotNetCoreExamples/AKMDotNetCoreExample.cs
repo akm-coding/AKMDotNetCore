@@ -4,7 +4,6 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Reflection.Metadata;
 
@@ -30,8 +29,10 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
         {
             Read();
             Create("Moe Moe Inya", "Inya", "Hello World!");
-            Edit(1);
+            Edit(3);
             Edit(300);
+            Update(3, "Hi", "Hello", "Halo");
+            Delete(3);
         }
 
         private void Read()
@@ -126,6 +127,48 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
             #endregion
         }
 
-        
+        private void Update(int id,string title, string author, string content)
+        {
+            #region Update
+
+            SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            connection.Open();
+
+
+            string query = @"UPDATE [dbo].[Tbl_Blog]
+   SET [Blog_Title] = @Blog_Title
+      ,[Blog_Author] = @Blog_Author
+      ,[Blog_Content] = @Blog_Content
+ WHERE Blog_Id = @Blog_Id";
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@Blog_Id", id);
+            cmd.Parameters.AddWithValue("@Blog_Title", title);
+            cmd.Parameters.AddWithValue("@Blog_Author", author);
+            cmd.Parameters.AddWithValue("@Blog_Content", content);
+            int result = cmd.ExecuteNonQuery();
+
+            connection.Close();
+
+            string message = result > 0 ? "Updating Successful." : "Updating Failed.";
+            Console.WriteLine(message);
+
+            #endregion
+        }
+
+        private void Delete(int id)
+        {
+            #region Delete
+            SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            connection.Open();
+            string query = @"DELETE FROM [dbo].[Tbl_Blog] WHERE Blog_Id = @Blog_Id";
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@Blog_Id", id);
+            int result = cmd.ExecuteNonQuery();
+            connection.Close();
+            string message = result > 0 ? "Deleting successfully!" : "Deleting Failed!";
+            Console.WriteLine(message);
+            #endregion
+        }
+
     }
 }
