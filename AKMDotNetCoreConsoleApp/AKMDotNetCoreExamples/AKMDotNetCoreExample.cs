@@ -13,36 +13,45 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
     public class AKMDotNetCoreExample
     {
 
+        private readonly SqlConnectionStringBuilder sqlConnectionStringBuilder;
+
+        public AKMDotNetCoreExample()
+        {
+            sqlConnectionStringBuilder = new SqlConnectionStringBuilder
+            {
+                DataSource = ".",
+                InitialCatalog = "AKMDotNetCore",
+                UserID = "sa",
+                Password = "sa@123",
+            };
+        }
+
         public void Run()
         {
             Read();
             Create("Moe Moe Inya", "Inya", "Hello World!");
+            Edit(1);
+            Edit(300);
         }
 
         private void Read()
         {
             #region Read / Retrieve
-            SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder()
-            {
-                DataSource = ".", //server name
-                InitialCatalog = "AKMDotNetCore", //database name
-                UserID = "sa",
-                Password = "sa@123",
-            };
-            SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString);
-            Console.WriteLine("Connection Opening...");
+
+            SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            Console.WriteLine("Connection opening...");
             connection.Open();
-            Console.WriteLine("Connection Opened.");
+            Console.WriteLine("Connection opened.");
 
-            string query = ("select * from tbl_blog");
+            string query = "select * from tbl_blog";
             SqlCommand cmd = new SqlCommand(query, connection);
-            SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
-            dataAdapter.Fill(dt);
+            adapter.Fill(dt);
 
-            Console.WriteLine("Connection Closing...");
+            Console.WriteLine("Connection closing...");
             connection.Close();
-            Console.WriteLine("Connection Closed.");
+            Console.WriteLine("Connection closed.");
 
             foreach (DataRow row in dt.Rows)
             {
@@ -51,22 +60,51 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
                 Console.WriteLine(row["Blog_Author"]);
                 Console.WriteLine(row["Blog_Content"]);
             }
+
+            #endregion
+        }
+
+        private void Edit(int id)
+        {
+            #region Edit
+
+            SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            connection.Open();
+
+            string query = "select * from tbl_blog where Blog_Id = @Blog_Id;";
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@Blog_Id", id);
+            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            adapter.Fill(dt);
+
+            connection.Close();
+
+            if (dt.Rows.Count == 0)
+            {
+                Console.WriteLine("No data found.");
+                return;
+            }
+
+            DataRow row = dt.Rows[0];
+
+            Console.WriteLine(row["Blog_Id"]);
+            Console.WriteLine(row["Blog_Title"]);
+            Console.WriteLine(row["Blog_Author"]);
+            Console.WriteLine(row["Blog_Content"]);
+
             #endregion
         }
 
         private void Create(string title, string author, string content)
         {
             #region Create
-            SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder()
-            {
-                DataSource = ".", //server name
-                InitialCatalog = "AKMDotNetCore", //database name
-                UserID = "sa",
-                Password = "sa@123",
-            };
-            SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString);
+
+            SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
             connection.Open();
-             string query = @"INSERT INTO [dbo].[Tbl_Blog]
+
+
+            string query = @"INSERT INTO [dbo].[Tbl_Blog]
            ([Blog_Title]
            ,[Blog_Author]
            ,[Blog_Content])
@@ -81,9 +119,13 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
             int result = cmd.ExecuteNonQuery();
 
             connection.Close();
-            string message = result > 0 ? "Saving Successfully!" : "Saving Failed!";
+
+            string message = result > 0 ? "Saving Successful." : "Saving Failed.";
             Console.WriteLine(message);
+
             #endregion
         }
+
+        
     }
 }
