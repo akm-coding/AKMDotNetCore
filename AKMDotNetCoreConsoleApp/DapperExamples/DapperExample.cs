@@ -5,16 +5,16 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Reflection.Metadata;
+using Dapper;
+using AKMDotNetCoreConsoleApp.Models;
 
-namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
+namespace AKMDotNetCoreConsoleApp.DapperExamples
 {
-    public class AKMDotNetCoreExample
+    public class DapperExample
     {
-
         private readonly SqlConnectionStringBuilder sqlConnectionStringBuilder;
 
-        public AKMDotNetCoreExample()
+        public DapperExample()
         {
             sqlConnectionStringBuilder = new SqlConnectionStringBuilder
             {
@@ -28,38 +28,28 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
         public void Run()
         {
             Read();
-            Create("Moe Moe Inya", "Inya", "Hello World!");
+            //Create("Moe Moe Inya", "Inya", "Hello World!");
             Edit(3);
             Edit(300);
-            Update(3, "Hi", "Hello", "Halo");
-            Delete(3);
+            //Update(3, "Hi", "Hello", "Halo");
+            //Delete(3);
         }
 
         private void Read()
         {
             #region Read / Retrieve
 
-            SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
-            Console.WriteLine("Connection opening...");
-            connection.Open();
-            Console.WriteLine("Connection opened.");
-
             string query = "select * from tbl_blog";
-            SqlCommand cmd = new SqlCommand(query, connection);
-            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
+            IDbConnection db = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            //List<dynamic> lst = db.Query(query).ToList();
+            List<BlogDataModel> lst = db.Query<BlogDataModel>(query).ToList();
 
-            Console.WriteLine("Connection closing...");
-            connection.Close();
-            Console.WriteLine("Connection closed.");
-
-            foreach (DataRow row in dt.Rows)
+            foreach( var item in lst )
             {
-                Console.WriteLine(row["Blog_Id"]);
-                Console.WriteLine(row["Blog_Title"]);
-                Console.WriteLine(row["Blog_Author"]);
-                Console.WriteLine(row["Blog_Content"]);
+                Console.WriteLine(item.Blog_Id);
+                Console.WriteLine(item.Blog_Title);
+                Console.WriteLine(item.Blog_Author);
+                Console.WriteLine(item.Blog_Content);
             }
 
             #endregion
@@ -68,31 +58,19 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
         private void Edit(int id)
         {
             #region Edit
+            string query = "select * from tbl_blog where Blog_Id = @Blog_Id";
+            IDbConnection db = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            //List<dynamic> lst = db.Query(query).ToList();
+            List<BlogDataModel> lst = db.Query<BlogDataModel>(query).ToList();
 
-            SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
-            connection.Open();
-
-            string query = "select * from tbl_blog where Blog_Id = @Blog_Id;";
-            SqlCommand cmd = new SqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("@Blog_Id", id);
-            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            connection.Close();
-
-            if (dt.Rows.Count == 0)
+            foreach (var item in lst)
             {
-                Console.WriteLine("No data found.");
-                return;
+                Console.WriteLine(item.Blog_Id);
+                Console.WriteLine(item.Blog_Title);
+                Console.WriteLine(item.Blog_Author);
+                Console.WriteLine(item.Blog_Content);
             }
 
-            DataRow row = dt.Rows[0];
-
-            Console.WriteLine(row["Blog_Id"]);
-            Console.WriteLine(row["Blog_Title"]);
-            Console.WriteLine(row["Blog_Author"]);
-            Console.WriteLine(row["Blog_Content"]);
 
             #endregion
         }
@@ -127,7 +105,7 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
             #endregion
         }
 
-        private void Update(int id,string title, string author, string content)
+        private void Update(int id, string title, string author, string content)
         {
             #region Update
 
@@ -169,6 +147,5 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
             Console.WriteLine(message);
             #endregion
         }
-
     }
 }
