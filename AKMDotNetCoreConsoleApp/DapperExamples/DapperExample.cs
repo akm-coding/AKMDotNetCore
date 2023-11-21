@@ -27,8 +27,8 @@ namespace AKMDotNetCoreConsoleApp.DapperExamples
 
         public void Run()
         {
-            Read();
-            //Create("Moe Moe Inya", "Inya", "Hello World!");
+            //Read();
+            Create("Moe Moe Inya", "Inya", "Hello World!");
             //Edit(3);
             //Edit(300);
             //Update(3, "Hi", "Hello", "Halo");
@@ -55,10 +55,9 @@ namespace AKMDotNetCoreConsoleApp.DapperExamples
             #endregion
         }
 
+        #region Edit
         private void Edit(int id)
         {
-            #region Edit
-
             BlogDataModel blog = new BlogDataModel()
             {
                 Blog_Id = id,
@@ -76,10 +75,8 @@ namespace AKMDotNetCoreConsoleApp.DapperExamples
                 Console.WriteLine(item.Blog_Author);
                 Console.WriteLine(item.Blog_Content);
             }
-
-
-            #endregion
         }
+        #endregion
 
         private void Create(string title, string author, string content)
         {
@@ -90,13 +87,13 @@ namespace AKMDotNetCoreConsoleApp.DapperExamples
 
 
             string query = @"INSERT INTO [dbo].[Tbl_Blog]
-           ([Blog_Title]
-           ,[Blog_Author]
-           ,[Blog_Content])
-     VALUES
-           (@Blog_Title
-           ,@Blog_Author
-           ,@Blog_Content)";
+                           ([Blog_Title]
+                           ,[Blog_Author]
+                           ,[Blog_Content])
+                     VALUES
+                           (@Blog_Title
+                           ,@Blog_Author
+                           ,@Blog_Content)";
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@Blog_Title", title);
             cmd.Parameters.AddWithValue("@Blog_Author", author);
@@ -110,20 +107,18 @@ namespace AKMDotNetCoreConsoleApp.DapperExamples
 
             #endregion
         }
-
+        
+        #region Update
         private void Update(int id, string title, string author, string content)
         {
-            #region Update
-
             SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
             connection.Open();
 
-
             string query = @"UPDATE [dbo].[Tbl_Blog]
-   SET [Blog_Title] = @Blog_Title
-      ,[Blog_Author] = @Blog_Author
-      ,[Blog_Content] = @Blog_Content
- WHERE Blog_Id = @Blog_Id";
+                           SET [Blog_Title] = @Blog_Title
+                              ,[Blog_Author] = @Blog_Author
+                              ,[Blog_Content] = @Blog_Content
+                         WHERE Blog_Id = @Blog_Id";
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@Blog_Id", id);
             cmd.Parameters.AddWithValue("@Blog_Title", title);
@@ -136,12 +131,13 @@ namespace AKMDotNetCoreConsoleApp.DapperExamples
             string message = result > 0 ? "Updating Successful." : "Updating Failed.";
             Console.WriteLine(message);
 
-            #endregion
         }
+        #endregion
 
+        #region Delete
         private void Delete(int id)
         {
-            #region Delete
+            
             SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
             connection.Open();
             string query = @"DELETE FROM [dbo].[Tbl_Blog] WHERE Blog_Id = @Blog_Id";
@@ -151,7 +147,8 @@ namespace AKMDotNetCoreConsoleApp.DapperExamples
             connection.Close();
             string message = result > 0 ? "Deleting successfully!" : "Deleting Failed!";
             Console.WriteLine(message);
-            #endregion
+           
         }
+        #endregion
     }
 }

@@ -6,11 +6,11 @@ using System.Data.SqlClient;
 
 Console.WriteLine("Hello, World!");
 
-AKMDotNetCoreExample adoDotNetExample = new AKMDotNetCoreExample();
-adoDotNetExample.Run();
+//AKMDotNetCoreExample adoDotNetExample = new AKMDotNetCoreExample();
+//adoDotNetExample.Run();
 
-//DapperExample dapperExample = new DapperExample();
-//dapperExample.Run();
+DapperExample dapperExample = new DapperExample();
+dapperExample.Run();
 
 
 Console.ReadKey();
