@@ -11,7 +11,6 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
 {
     public class AKMDotNetCoreExample
     {
-
         private readonly SqlConnectionStringBuilder sqlConnectionStringBuilder;
 
         public AKMDotNetCoreExample()
@@ -35,10 +34,9 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
             Delete(3);
         }
 
+        #region Read / Retrieve
         private void Read()
         {
-            #region Read / Retrieve
-
             SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
             Console.WriteLine("Connection opening...");
             connection.Open();
@@ -61,14 +59,12 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
                 Console.WriteLine(row["Blog_Author"]);
                 Console.WriteLine(row["Blog_Content"]);
             }
-
-            #endregion
         }
+        #endregion
 
+        #region Edit
         private void Edit(int id)
         {
-            #region Edit
-
             SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
             connection.Open();
 
@@ -88,31 +84,27 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
             }
 
             DataRow row = dt.Rows[0];
-
             Console.WriteLine(row["Blog_Id"]);
             Console.WriteLine(row["Blog_Title"]);
             Console.WriteLine(row["Blog_Author"]);
             Console.WriteLine(row["Blog_Content"]);
-
-            #endregion
         }
+        #endregion
 
+        #region Create
         private void Create(string title, string author, string content)
         {
-            #region Create
-
             SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
             connection.Open();
 
-
             string query = @"INSERT INTO [dbo].[Tbl_Blog]
-           ([Blog_Title]
-           ,[Blog_Author]
-           ,[Blog_Content])
-     VALUES
-           (@Blog_Title
-           ,@Blog_Author
-           ,@Blog_Content)";
+                           ([Blog_Title]
+                           ,[Blog_Author]
+                           ,[Blog_Content])
+                     VALUES
+                           (@Blog_Title
+                           ,@Blog_Author
+                           ,@Blog_Content)";
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@Blog_Title", title);
             cmd.Parameters.AddWithValue("@Blog_Author", author);
@@ -124,22 +116,21 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
             string message = result > 0 ? "Saving Successful." : "Saving Failed.";
             Console.WriteLine(message);
 
-            #endregion
         }
+        #endregion
 
-        private void Update(int id,string title, string author, string content)
+        #region Update
+        private void Update(int id, string title, string author, string content)
         {
-            #region Update
-
+            
             SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
             connection.Open();
 
-
             string query = @"UPDATE [dbo].[Tbl_Blog]
-   SET [Blog_Title] = @Blog_Title
-      ,[Blog_Author] = @Blog_Author
-      ,[Blog_Content] = @Blog_Content
- WHERE Blog_Id = @Blog_Id";
+                           SET [Blog_Title] = @Blog_Title
+                              ,[Blog_Author] = @Blog_Author
+                              ,[Blog_Content] = @Blog_Content
+                         WHERE Blog_Id = @Blog_Id";
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@Blog_Id", id);
             cmd.Parameters.AddWithValue("@Blog_Title", title);
@@ -152,12 +143,13 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
             string message = result > 0 ? "Updating Successful." : "Updating Failed.";
             Console.WriteLine(message);
 
-            #endregion
         }
+        #endregion
 
+        #region Delete
         private void Delete(int id)
         {
-            #region Delete
+            
             SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
             connection.Open();
             string query = @"DELETE FROM [dbo].[Tbl_Blog] WHERE Blog_Id = @Blog_Id";
@@ -167,8 +159,8 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
             connection.Close();
             string message = result > 0 ? "Deleting successfully!" : "Deleting Failed!";
             Console.WriteLine(message);
-            #endregion
+            
         }
-
+        #endregion
     }
 }

@@ -29,8 +29,8 @@ namespace AKMDotNetCoreConsoleApp.DapperExamples
         {
             Read();
             //Create("Moe Moe Inya", "Inya", "Hello World!");
-            Edit(3);
-            Edit(300);
+            //Edit(3);
+            //Edit(300);
             //Update(3, "Hi", "Hello", "Halo");
             //Delete(3);
         }
@@ -58,10 +58,16 @@ namespace AKMDotNetCoreConsoleApp.DapperExamples
         private void Edit(int id)
         {
             #region Edit
+
+            BlogDataModel blog = new BlogDataModel()
+            {
+                Blog_Id = id,
+            };
+
             string query = "select * from tbl_blog where Blog_Id = @Blog_Id";
             IDbConnection db = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
             //List<dynamic> lst = db.Query(query).ToList();
-            List<BlogDataModel> lst = db.Query<BlogDataModel>(query).ToList();
+            List<BlogDataModel> lst = db.Query<BlogDataModel>(query,blog).ToList();
 
             foreach (var item in lst)
             {
