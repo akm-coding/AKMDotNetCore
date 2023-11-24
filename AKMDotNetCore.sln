@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AKMDotNetCoreConsoleApp", "AKMDotNetCoreConsoleApp\AKMDotNetCoreConsoleApp.csproj", "{C0A4C267-F5BF-494C-8AC3-478E0707C36B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AKMDotNetCoreConsoleApp", "AKMDotNetCoreConsoleApp\AKMDotNetCoreConsoleApp.csproj", "{C0A4C267-F5BF-494C-8AC3-478E0707C36B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AKMDotNetCore.RestApi", "AKMDotNetCore.RestApi\AKMDotNetCore.RestApi.csproj", "{BFC65B96-60D5-4A7D-BB21-5D6CB2A01E5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AKMDotNetCore.MinimalApi", "AKMDotNetCore.MinimalApi\AKMDotNetCore.MinimalApi.csproj", "{5C1E7876-5C5C-46E4-9162-3C5625C942DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{C0A4C267-F5BF-494C-8AC3-478E0707C36B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0A4C267-F5BF-494C-8AC3-478E0707C36B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0A4C267-F5BF-494C-8AC3-478E0707C36B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFC65B96-60D5-4A7D-BB21-5D6CB2A01E5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFC65B96-60D5-4A7D-BB21-5D6CB2A01E5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFC65B96-60D5-4A7D-BB21-5D6CB2A01E5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFC65B96-60D5-4A7D-BB21-5D6CB2A01E5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C1E7876-5C5C-46E4-9162-3C5625C942DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C1E7876-5C5C-46E4-9162-3C5625C942DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C1E7876-5C5C-46E4-9162-3C5625C942DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C1E7876-5C5C-46E4-9162-3C5625C942DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
