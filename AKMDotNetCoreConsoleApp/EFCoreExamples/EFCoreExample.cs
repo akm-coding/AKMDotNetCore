@@ -19,8 +19,9 @@ namespace AKMDotNetCoreConsoleApp.EFCoreExamples
         public void Run()
         {
             Read();
-            //Edit(2);
-            //Edit(300);
+            Edit(2);
+            Edit(300);
+            Create("Lin Ka Di Pa Chit Thu","Chit Oo Nyo","Yama, Datha & Thida");
         }
 
         private void Read()
@@ -51,6 +52,21 @@ namespace AKMDotNetCoreConsoleApp.EFCoreExamples
             Console.WriteLine(item.Blog_Author);
             Console.WriteLine(item.Blog_Content);
 
+        }
+
+        private void Create(string title,string author,string content)
+        {
+            BlogDataModel blog = new BlogDataModel
+            {
+                Blog_Title = title,
+                Blog_Author = author,
+                Blog_Content = content
+            };
+            //_dbContext.Add(blog);
+            _dbContext.Blogs.Add(blog);
+            int result = _dbContext.SaveChanges();
+            string message = result > 0 ? "Saving successful!" : "Saving failed!";
+            Console.WriteLine(message);
         }
     }
 }
