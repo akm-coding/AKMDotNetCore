@@ -22,6 +22,7 @@ namespace AKMDotNetCoreConsoleApp.EFCoreExamples
             Edit(2);
             Edit(300);
             Create("Lin Ka Di Pa Chit Thu","Chit Oo Nyo","Yama, Datha & Thida");
+            Update(25, "Ma ti vuu", "Anonymous", "Ma ti vuu content");
         }
 
         private void Read()
@@ -66,6 +67,25 @@ namespace AKMDotNetCoreConsoleApp.EFCoreExamples
             _dbContext.Blogs.Add(blog);
             int result = _dbContext.SaveChanges();
             string message = result > 0 ? "Saving successful!" : "Saving failed!";
+            Console.WriteLine(message);
+            Console.WriteLine(blog.Blog_Id);
+        }
+
+        private void Update(int id,string title, string author, string content)
+        {
+            var blog = _dbContext.Blogs.FirstOrDefault(x => x.Blog_Id == id);
+            if (blog is null)
+            {
+                Console.WriteLine("No Data Found!");
+                return;
+            }
+
+            blog.Blog_Title = title;
+            blog.Blog_Author = author;
+            blog.Blog_Content = content;
+
+            int result = _dbContext.SaveChanges();
+            string message = result > 0 ? "Update successful!" : "Update failed!";
             Console.WriteLine(message);
         }
     }
