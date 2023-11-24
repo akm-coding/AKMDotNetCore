@@ -23,6 +23,7 @@ namespace AKMDotNetCoreConsoleApp.EFCoreExamples
             Edit(300);
             Create("Lin Ka Di Pa Chit Thu","Chit Oo Nyo","Yama, Datha & Thida");
             Update(25, "Ma ti vuu", "Anonymous", "Ma ti vuu content");
+            Delete(24);
         }
 
         private void Read()
@@ -86,6 +87,21 @@ namespace AKMDotNetCoreConsoleApp.EFCoreExamples
 
             int result = _dbContext.SaveChanges();
             string message = result > 0 ? "Update successful!" : "Update failed!";
+            Console.WriteLine(message);
+        }
+
+        private void Delete(int id)
+        {
+            var blog = _dbContext.Blogs.FirstOrDefault(x => x.Blog_Id == id);
+            if (blog is null)
+            {
+                Console.WriteLine("No Data Found!");
+                return;
+            }
+
+            _dbContext.Blogs.Remove(blog);
+            int result = _dbContext.SaveChanges();
+            string message = result > 0 ? "Delete successful!" : "Delete failed!";
             Console.WriteLine(message);
         }
     }
