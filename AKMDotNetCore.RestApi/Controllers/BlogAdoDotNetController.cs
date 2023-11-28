@@ -43,8 +43,8 @@ namespace AKMDotNetCore.RestApi.Controllers
             {
                 BlogDataModel item = new BlogDataModel();
                 item.Blog_Id = Convert.ToInt32(row["Blog_Id"]);
-                item.Blog_Title = row["Blog_Id"].ToString();
-                item.Blog_Author = row["Blog_Title"].ToString();
+                item.Blog_Title = row["Blog_Title"].ToString();
+                item.Blog_Author = row["Blog_Author"].ToString();
                 item.Blog_Content = row["Blog_Content"].ToString();
                 lst.Add(item);
             }
