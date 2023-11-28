@@ -129,6 +129,27 @@ namespace AKMDotNetCore.RestApi.Controllers
 
             string query = "select * from tbl_blog where Blog_Id = @Blog_Id";
             SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@Blog_Id", id);
+            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            adapter.Fill(dt);
+            connection.Close();
+
+            if (dt.Rows.Count == 0)
+            {
+                return NotFound(new { IsSuccess = false, Message = "No data found!" });
+            }
+
+            connection.Open();
+            query = @"UPDATE [dbo].[Tbl_Blog]
+                    SET [Blog_Title] = @Blog_Title
+                        ,[Blog_Author] = @Blog_Author
+                        ,[Blog_Content] = @Blog_Content
+                    WHERE Blog_Id = @Blog_Id";
+
+            cmd = new SqlCommand(query, connection);
+
+            cmd.Parameters.AddWithValue("@Blog_Id", id);
             cmd.Parameters.AddWithValue("@Blog_Title", blog.Blog_Title);
             cmd.Parameters.AddWithValue("@Blog_Author", blog.Blog_Author);
             cmd.Parameters.AddWithValue("@Blog_Content", blog.Blog_Content);
@@ -142,16 +163,19 @@ namespace AKMDotNetCore.RestApi.Controllers
                 Message = result > 0 ? "Update successful." : "Update failed.",
                 Data = blog
             };
+
             return Ok(model);
         }
 
+
         [HttpPatch("{id}")]
-        public IActionResult Patchblog(int id, BlogDataModel blog)
+        public IActionResult PatchBlog(int id, BlogDataModel blog)
         {
             SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
             connection.Open();
 
-            string query = "select * from tbl_blog where blog_id = @blog_id";
+            string query = "select * from tbl_blog where Blog_Id = @Blog_Id";
+
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@Blog_Id", id);
             SqlDataAdapter adapter = new SqlDataAdapter(cmd);
@@ -162,53 +186,49 @@ namespace AKMDotNetCore.RestApi.Controllers
 
             if (dt.Rows.Count == 0)
             {
-                var response = new { IsSuccess = false, Message = "No data found!" };
-                return NotFound(response);
+                return NotFound(new { IsSuccess = false, Message = "Data not found!" });
             }
 
-            connection.Open();
-            SqlCommand command = new SqlCommand();
             string conditions = "";
+
+            connection.Open();
+
+            SqlCommand cmd2 = new SqlCommand();
 
             if (!string.IsNullOrEmpty(blog.Blog_Title))
             {
                 conditions += "[Blog_Title] = @Blog_Title, ";
-                command.Parameters.AddWithValue("@Blog_Title", blog.Blog_Title);
+                cmd2.Parameters.AddWithValue("@Blog_Title", blog.Blog_Title);
             }
             if (!string.IsNullOrEmpty(blog.Blog_Author))
             {
                 conditions += "[Blog_Author] = @Blog_Author, ";
-                command.Parameters.AddWithValue("@Blog_Author", blog.Blog_Author);
+                cmd2.Parameters.AddWithValue("@Blog_Author", blog.Blog_Author);
             }
             if (!string.IsNullOrEmpty(blog.Blog_Content))
             {
                 conditions += "[Blog_Content] = @Blog_Content, ";
-                command.Parameters.AddWithValue("@Blog_Content", blog.Blog_Content);
+                cmd2.Parameters.AddWithValue("@Blog_Content", blog.Blog_Content);
             }
-            if (conditions.Length == 0)
+            if (conditions.Length > 0)
             {
-                var response = new { IsSuccess = false, Message = "No data to update!" };
-                return NotFound(response);
+                conditions = conditions.Substring(0, conditions.Length - 2);
             }
 
-            conditions = conditions.Substring(0, conditions.Length - 2);
-
-            query = $@"UPDATE [dbo].[Tbl_Blog]
-                    SET {conditions} WHERE Blog_Id=@Blog_Id";
-
-            command.CommandText = query;
-            command.Connection = connection;
-            command.Parameters.AddWithValue("@Blog_Id", id);
-            int result = command.ExecuteNonQuery();
+            string queryUpdate = $@"UPDATE [dbo].[Tbl_Blog] SET {conditions} WHERE Blog_Id = @Blog_Id";
+            cmd2.CommandText = queryUpdate;
+            cmd2.Connection = connection;
+            cmd2.Parameters.AddWithValue("@Blog_Id", id);
+            var result = cmd2.ExecuteNonQuery();
 
             connection.Close();
 
             BlogResponseModel model = new BlogResponseModel
             {
                 IsSuccess = result > 0,
-                Message = result > 0 ? "Updating successful!" : "Updating failed!",
-                Data = blog
+                Message = result > 0 ? "Update successful." : "Update failed.",
             };
+
             return Ok(model);
         }
 
