@@ -1,0 +1,29 @@
+﻿@model List<BlogDataModel>
+
+@{
+    int count = 0;
+}
+
+<p>Blog index</p>
+<p>@Model.Count</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>No.</th>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Content</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (BlogDataModel item in Model)
+        {
+            <tr>
+                <td>@(++count)</td>
+                <td>@item.Blog_Title</td>
+                <td>@item.Blog_Author</td>
+                <td>@item.Blog_Content</td>
+            </tr>
+        }
+    </tbody>
+</table>
