@@ -36,6 +36,26 @@ function confirmMessage(message) {
     });
   });
 }
+
+function confirmMessage2(message) {
+  return new Promise((resolve, reject) => {
+      Notiflix.Confirm.show(
+          'Confirm',
+          message,
+          'Yes',
+          'No',
+          function okCb() {
+              resolve(true)
+          },
+          function cancelCb() {
+              resolve(false)
+          },
+          {
+          },
+      );
+  });
+}
+
 function readUser() {
   $("#tbTbody").html("");
 
