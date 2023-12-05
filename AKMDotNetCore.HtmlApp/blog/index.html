@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog</title>
+    <!-- css -->
+    <link rel="stylesheet" href="./blog.css" />
+
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lobster&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- sweetalert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- utility functions -->
+    <script src="./utilities.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div>
+        <h1 class="header">AKM Blog</h1>
+      </div>
+      <div style="margin: 20px 0 20px">
+        <form class="row g-3">
+          <div class="col-auto">
+            <label for="title" class="visually-hidden">Blog Title</label>
+            <input
+              type="text"
+              class="form-control"
+              id="title"
+              placeholder="Enter Blog Title"
+            />
+          </div>
+          <div class="col-auto">
+            <label for="author" class="visually-hidden">Blog Author</label>
+            <input
+              type="text"
+              class="form-control"
+              id="author"
+              placeholder="Enter Blog Author"
+            />
+          </div>
+          <div class="col-auto">
+            <label for="content" class="visually-hidden">Blog Content</label>
+            <input
+              type="text"
+              class="form-control"
+              id="content"
+              placeholder="Enter Blog Content"
+            />
+          </div>
+          <div class="col-auto">
+            <button
+              type="button"
+              class="btn btn-outline-success mb-2"
+              id="saveBtn"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="table-container">
+        <table class="table table-info table-striped">
+          <thead>
+            <tr>
+              <th scope="col">No</th>
+              <th scope="col">ID</th>
+              <th scope="col">Blog Title</th>
+              <th scope="col">Blog Author</th>
+              <th scope="col">Blog Content</th>
+              <th scope="col">Edit</th>
+              <th scope="col">Delete</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- scripts  -->
+    <script>
+      let blogId = null;
+
+      const getAllBlogs = () => {
+        let body = $("#tbody").html("");
+
+        let blogs = getBlogs();
+        let htmlString = "";
+        if (blogs.length === 0) {
+          htmlString += `
+          <tr>
+            <td class="no-data" colspan='7'>
+              There is no data found!
+            </td>
+          </tr>
+          `;
+          body.html(htmlString);
+        } else {
+          $.each(blogs, (i, blog) => {
+            htmlString += `
+          <tr>
+            <th scope="row">${i + 1}</th>
+            <td>${blog.id}</td>
+            <td>${blog.title}</td>
+            <td>${blog.author}</td>
+            <td>${blog.content}</td>
+            <td
+              style="color: orange; font-size: larger"
+              class="edit"
+              id="editBtn"
+              onClick="editBlog('${blog.id}')"
+            >
+              <i class="fa-solid fa-pen-to-square"></i>
+            </td>
+            <td
+              style="color: red; font-size: larger"
+              class="delete"
+              id="deleteBtn"
+              onClick="deleteBlog('${blog.id}')"
+            >
+              <i class="fa-regular fa-trash"></i>
+            </td>
+          </tr>
+          `;
+            body.html(htmlString);
+          });
+        }
+      };
+
+      const createBlog = (title, author, content) => {
+        let blogs = getBlogs();
+        let payload = { id: uuidv4(), title, author, content };
+        blogs.push(payload);
+        localStorage.setItem("tbl_blogs", JSON.stringify(blogs));
+        successMessage("Successfully Created");
+      };
+
+      const editBlog = (id) => {
+        let blogs = getBlogs();
+        let blog = blogs.filter((blog) => blog.id === id)[0];
+
+        if (blog === undefined || blog === null) {
+          console.log("not found edit blog");
+          return;
+        }
+
+        $("#title").val(blog.title);
+        $("#author").val(blog.author);
+        $("#content").val(blog.content);
+        blogId = blog.id;
+      };
+
+      const updateBlog = () => {
+        const title = $("#title").val();
+        const author = $("#author").val();
+        const content = $("#content").val();
+
+        let blogs = getBlogs();
+
+        let blogIndex = blogs.findIndex((x) => x.id === blogId);
+
+        blogs[blogIndex].title = title;
+        blogs[blogIndex].author = author;
+        blogs[blogIndex].content = content;
+        localStorage.setItem("tbl_blogs", JSON.stringify(blogs));
+
+        blogId = null;
+        successMessage("Successfully Updated");
+      };
+
+      const deleteBlog = (id) => {
+        confirmMessage("Are you sure you want to delete?").then((result) => {
+          if (!result) return;
+          let blogs = getBlogs();
+          let blog = blogs.filter((blog) => blog.id === id)[0];
+
+          if (blog === undefined || blog === null) {
+            console.log("not found delete blog");
+            return;
+          }
+
+          blogs = blogs.filter((x) => x.id !== blog.id);
+          localStorage.setItem("tbl_blogs", JSON.stringify(blogs));
+          getAllBlogs();
+          successMessage("Successfully Deleted");
+        });
+      };
+
+      /////////////////////////////////////////////////////////////////////////////
+
+      // read
+      getAllBlogs();
+
+      // create
+      $("#saveBtn").click(() => {
+        let title = $("#title").val();
+        let author = $("#author").val();
+        let content = $("#content").val();
+
+        if (
+          title.trim() !== "" &&
+          author.trim() !== "" &&
+          content.trim() !== ""
+        ) {
+          console.log("Saving Successful");
+        } else {
+          return warningMessage("Please enter all fields!");
+        }
+
+        blogId !== undefined && blogId !== null && blogId !== ""
+          ? updateBlog()
+          : createBlog(title, author, content);
+
+        clearForm();
+        getAllBlogs();
+      });
+
+      // edit
+      // delete
+      // already call in htmlString
+    </script>
+  </body>
+</html>
