@@ -2,24 +2,36 @@
 using AKMDotNetCore.MvcApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace AKMDotNetCore.MvcApp.Controllers
 {
-    public class BlogController : Controller
+    public class BlogAjaxController : Controller
     {
         private readonly AppDbContext _context;
 
-        public BlogController(AppDbContext context)
+        public BlogAjaxController(AppDbContext context)
         {
             _context = context;
         }
 
-        [ActionName("Index")]
-        public IActionResult BlogIndex()
+        [ActionName("List")]
+        public async Task<IActionResult> BlogList(int pageNo = 1, int pageSize = 5)
         {
-            List<BlogDataModel> lst = _context.Blogs.ToList();
-            return View("BlogIndex", lst);
+            BlogDataResponseModel model = new BlogDataResponseModel();
+
+            List<BlogDataModel> lst = _context.Blogs.AsNoTracking().Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
+
+            int rowCount = await _context.Blogs.CountAsync();
+            int pageCount = rowCount / pageSize;
+            if (rowCount % pageSize > 0)
+            {
+                pageCount++;
+            }
+
+            model.Blogs = lst;
+            model.PageSetting = new PageSettingModel(pageNo, pageSize, pageCount, "/blogajax/list");
+
+            return View("BlogList", model);
         }
 
         [ActionName("Create")]
@@ -34,10 +46,12 @@ namespace AKMDotNetCore.MvcApp.Controllers
         {
             await _context.Blogs.AddAsync(reqModel);
             var result = await _context.SaveChangesAsync();
-            string message = result > 0 ? "Saving Successful." : "Saving Failed.";
+            string message = result > 0 ? "Saving Successful!" : "Saving Failed!";
             TempData["Message"] = message;
             TempData["IsSuccess"] = result > 0;
-            return Redirect("/blog");
+
+            MessageModel model = new MessageModel(result > 0, message);
+            return Json(model);
         }
 
         [ActionName("Edit")]
@@ -47,7 +61,7 @@ namespace AKMDotNetCore.MvcApp.Controllers
             {
                 TempData["Message"] = "No data found.";
                 TempData["IsSuccess"] = false;
-                return Redirect("/blog");
+                return Redirect("/blogajax/list");
             }
 
             var blog = await _context.Blogs.AsNoTracking().FirstOrDefaultAsync(x => x.Blog_Id == id);
@@ -55,10 +69,14 @@ namespace AKMDotNetCore.MvcApp.Controllers
             {
                 TempData["Message"] = "No data found.";
                 TempData["IsSuccess"] = false;
-                return Redirect("/blog");
+                return Redirect("/blogajax/list");
             }
 
-            return View("BlogEdit", blog);
+            MessageModel model = new MessageModel(true, "data");
+
+            return Json(model, blog);
+
+            //return View("BlogEdit", blog);
         }
 
         [HttpPost]
@@ -69,7 +87,7 @@ namespace AKMDotNetCore.MvcApp.Controllers
             {
                 TempData["Message"] = "No data found.";
                 TempData["IsSuccess"] = false;
-                return Redirect("/blog");
+                return Redirect("/blogajax/list");
             }
 
             var blog = await _context.Blogs.FirstOrDefaultAsync(x => x.Blog_Id == id);
@@ -77,7 +95,7 @@ namespace AKMDotNetCore.MvcApp.Controllers
             {
                 TempData["Message"] = "No data found.";
                 TempData["IsSuccess"] = false;
-                return Redirect("/blog");
+                return Redirect("/blogajax/list");
             }
 
             blog.Blog_Title = reqModel.Blog_Title;
@@ -85,11 +103,14 @@ namespace AKMDotNetCore.MvcApp.Controllers
             blog.Blog_Content = reqModel.Blog_Content;
 
             int result = _context.SaveChanges();
+
             string message = result > 0 ? "Updating Successful." : "Updating Failed.";
             TempData["Message"] = message;
             TempData["IsSuccess"] = result > 0;
 
-            return Redirect("/blog");
+            MessageModel model = new MessageModel(result > 0, message);
+
+            return Json(model);
         }
 
         [ActionName("Delete")]
@@ -99,24 +120,27 @@ namespace AKMDotNetCore.MvcApp.Controllers
             {
                 TempData["Message"] = "No data found.";
                 TempData["IsSuccess"] = false;
-                return Redirect("/blog");
+                return Redirect("/blogajax/list");
             }
 
-            var blog = await _context.Blogs.AsNoTracking().FirstOrDefaultAsync(x => x.Blog_Id == id);
+            var blog = await _context.Blogs.FirstOrDefaultAsync(x => x.Blog_Id == id);
             if (blog is null)
             {
                 TempData["Message"] = "No data found.";
                 TempData["IsSuccess"] = false;
-                return Redirect("/blog");
+                return Redirect("/blogajax/list ");
             }
 
             _context.Remove(blog);
             int result = _context.SaveChanges();
+
             string message = result > 0 ? "Deleting Successful." : "Deleting Failed.";
             TempData["Message"] = message;
             TempData["IsSuccess"] = result > 0;
 
-            return Redirect("/blog");
+            MessageModel model = new MessageModel(result > 0, message);
+
+            return Json(model);
         }
     }
 }
