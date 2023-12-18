@@ -15,18 +15,18 @@ namespace AKMDotNetCore.MvcApp.Controllers
         }
 
         [ActionName("List")]
-        public async Task<IActionResult> BlogList(int pageNo = 1, int pageSize = 5)
+        public async Task<IActionResult> BlogList(int pageNo = 1, int pageSize = 10)
         {
             BlogDataResponseModel model = new BlogDataResponseModel();
-
-            List<BlogDataModel> lst = _context.Blogs.AsNoTracking().Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
+            List<BlogDataModel> lst = _context.Blogs.AsNoTracking()
+                .Skip((pageNo - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
             int rowCount = await _context.Blogs.CountAsync();
             int pageCount = rowCount / pageSize;
             if (rowCount % pageSize > 0)
-            {
                 pageCount++;
-            }
 
             model.Blogs = lst;
             model.PageSetting = new PageSettingModel(pageNo, pageSize, pageCount, "/blogajax/list");
@@ -46,7 +46,7 @@ namespace AKMDotNetCore.MvcApp.Controllers
         {
             await _context.Blogs.AddAsync(reqModel);
             var result = await _context.SaveChangesAsync();
-            string message = result > 0 ? "Saving Successful!" : "Saving Failed!";
+            string message = result > 0 ? "Saving Successful." : "Saving Failed.";
             TempData["Message"] = message;
             TempData["IsSuccess"] = result > 0;
 
@@ -54,16 +54,10 @@ namespace AKMDotNetCore.MvcApp.Controllers
             return Json(model);
         }
 
+        [HttpGet]
         [ActionName("Edit")]
         public async Task<IActionResult> BlogEdit(int id)
         {
-            if (!await _context.Blogs.AsNoTracking().AnyAsync(x => x.Blog_Id == id))
-            {
-                TempData["Message"] = "No data found.";
-                TempData["IsSuccess"] = false;
-                return Redirect("/blogajax/list");
-            }
-
             var blog = await _context.Blogs.AsNoTracking().FirstOrDefaultAsync(x => x.Blog_Id == id);
             if (blog is null)
             {
@@ -71,75 +65,53 @@ namespace AKMDotNetCore.MvcApp.Controllers
                 TempData["IsSuccess"] = false;
                 return Redirect("/blogajax/list");
             }
-
-            MessageModel model = new MessageModel(true, "data");
-
-            return Json(model, blog);
-
-            //return View("BlogEdit", blog);
+            return View("BlogEdit", blog);
         }
 
         [HttpPost]
         [ActionName("Update")]
         public async Task<IActionResult> BlogUpdate(int id, BlogDataModel reqModel)
         {
-            if (!await _context.Blogs.AsNoTracking().AnyAsync(x => x.Blog_Id == id))
+            var blog = await _context.Blogs.AsNoTracking().FirstOrDefaultAsync(x => x.Blog_Id == id);
+
+            if (blog != null)
             {
-                TempData["Message"] = "No data found.";
-                TempData["IsSuccess"] = false;
-                return Redirect("/blogajax/list");
+                blog.Blog_Title = reqModel.Blog_Title;
+                blog.Blog_Author = reqModel.Blog_Author;
+                blog.Blog_Content = reqModel.Blog_Content;
+
+                _context.Blogs.Update(blog);
+                var result = await _context.SaveChangesAsync();
+
+                string message = result > 0 ? "Update Successful." : "Update Failed.";
+                TempData["Message"] = message;
+                TempData["IsSuccess"] = result > 0;
+
+                MessageModel model = new MessageModel(result > 0, message);
+                return Json(model);
             }
 
-            var blog = await _context.Blogs.FirstOrDefaultAsync(x => x.Blog_Id == id);
-            if (blog is null)
-            {
-                TempData["Message"] = "No data found.";
-                TempData["IsSuccess"] = false;
-                return Redirect("/blogajax/list");
-            }
-
-            blog.Blog_Title = reqModel.Blog_Title;
-            blog.Blog_Author = reqModel.Blog_Author;
-            blog.Blog_Content = reqModel.Blog_Content;
-
-            int result = _context.SaveChanges();
-
-            string message = result > 0 ? "Updating Successful." : "Updating Failed.";
-            TempData["Message"] = message;
-            TempData["IsSuccess"] = result > 0;
-
-            MessageModel model = new MessageModel(result > 0, message);
-
-            return Json(model);
+            return Json(new MessageModel(false, "No Data Found to Update"));
         }
 
+        [HttpPost]
         [ActionName("Delete")]
-        public async Task<IActionResult> BlogDelete(int id)
+        public async Task<IActionResult> BlogDelete(BlogDataModel reqModel)
         {
-            if (!await _context.Blogs.AsNoTracking().AnyAsync(x => x.Blog_Id == id))
-            {
-                TempData["Message"] = "No data found.";
-                TempData["IsSuccess"] = false;
-                return Redirect("/blogajax/list");
-            }
+            BlogDataModel? blog = await _context.Blogs.FirstOrDefaultAsync(x => x.Blog_Id == reqModel.Blog_Id);
 
-            var blog = await _context.Blogs.FirstOrDefaultAsync(x => x.Blog_Id == id);
             if (blog is null)
             {
-                TempData["Message"] = "No data found.";
-                TempData["IsSuccess"] = false;
-                return Redirect("/blogajax/list ");
+                return Json(new MessageModel(false, "No data found."));
             }
 
-            _context.Remove(blog);
-            int result = _context.SaveChanges();
-
-            string message = result > 0 ? "Deleting Successful." : "Deleting Failed.";
+            _context.Blogs.Remove(blog);
+            var result = await _context.SaveChangesAsync();
+            string message = result > 0 ? "Your blog has been deleted." : "Deleting Failed.";
             TempData["Message"] = message;
             TempData["IsSuccess"] = result > 0;
 
             MessageModel model = new MessageModel(result > 0, message);
-
             return Json(model);
         }
     }
