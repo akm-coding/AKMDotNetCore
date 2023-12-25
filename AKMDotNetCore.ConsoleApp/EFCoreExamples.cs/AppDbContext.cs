@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using AKMDotNetCoreConsoleApp.Models;
+using Microsoft.Data.SqlClient;
 
 namespace AKMDotNetCoreConsoleApp.EFCoreExamples
 {

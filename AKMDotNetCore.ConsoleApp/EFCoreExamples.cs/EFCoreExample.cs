@@ -21,7 +21,7 @@ namespace AKMDotNetCoreConsoleApp.EFCoreExamples
             Read();
             Edit(2);
             Edit(300);
-            Create("Lin Ka Di Pa Chit Thu","Chit Oo Nyo","Yama, Datha & Thida");
+            Create("Lin Ka Di Pa Chit Thu", "Chit Oo Nyo", "Yama, Datha & Thida");
             Update(25, "Ma ti vuu", "Anonymous", "Ma ti vuu content");
             Delete(24);
         }
@@ -41,9 +41,9 @@ namespace AKMDotNetCoreConsoleApp.EFCoreExamples
 
         private void Edit(int id)
         {
-            BlogDataModel? item = _dbContext.Blogs.FirstOrDefault(x=>x.Blog_Id == id);
+            BlogDataModel? item = _dbContext.Blogs.FirstOrDefault(x => x.Blog_Id == id);
 
-            if(item is null)
+            if (item is null)
             {
                 Console.WriteLine("No data found.");
                 return;
@@ -56,7 +56,7 @@ namespace AKMDotNetCoreConsoleApp.EFCoreExamples
 
         }
 
-        private void Create(string title,string author,string content)
+        private void Create(string title, string author, string content)
         {
             BlogDataModel blog = new BlogDataModel
             {
@@ -72,7 +72,7 @@ namespace AKMDotNetCoreConsoleApp.EFCoreExamples
             Console.WriteLine(blog.Blog_Id);
         }
 
-        private void Update(int id,string title, string author, string content)
+        private void Update(int id, string title, string author, string content)
         {
             var blog = _dbContext.Blogs.FirstOrDefault(x => x.Blog_Id == id);
             if (blog is null)

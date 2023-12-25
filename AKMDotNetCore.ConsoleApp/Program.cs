@@ -1,5 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples;
+using AKMDotNetCoreConsoleApp.AdoDotNetExamples;
 using AKMDotNetCoreConsoleApp.DapperExamples;
 using AKMDotNetCoreConsoleApp.EFCoreExamples;
 using System.Data;

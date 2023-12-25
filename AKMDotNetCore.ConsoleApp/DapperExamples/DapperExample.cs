@@ -5,15 +5,17 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Reflection.Metadata;
+using Dapper;
+using AKMDotNetCoreConsoleApp.Models;
+using Microsoft.Data.SqlClient;
 
-namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
+namespace AKMDotNetCoreConsoleApp.DapperExamples
 {
-    public class AKMDotNetCoreExample
+    public class DapperExample
     {
         private readonly SqlConnectionStringBuilder sqlConnectionStringBuilder;
 
-        public AKMDotNetCoreExample()
+        public DapperExample()
         {
             sqlConnectionStringBuilder = new SqlConnectionStringBuilder
             {
@@ -26,76 +28,64 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
 
         public void Run()
         {
-            Read();
+            //Read();
             Create("Moe Moe Inya", "Inya", "Hello World!");
-            Edit(3);
-            Edit(300);
-            Update(3, "Hi", "Hello", "Halo");
-            Delete(3);
+            //Edit(3);
+            //Edit(300);
+            //Update(3, "Hi", "Hello", "Halo");
+            //Delete(3);
         }
 
-        #region Read / Retrieve
         private void Read()
         {
-            SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
-            Console.WriteLine("Connection opening...");
-            connection.Open();
-            Console.WriteLine("Connection opened.");
+            #region Read / Retrieve
 
             string query = "select * from tbl_blog";
-            SqlCommand cmd = new SqlCommand(query, connection);
-            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
+            IDbConnection db = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            //List<dynamic> lst = db.Query(query).ToList();
+            List<BlogDataModel> lst = db.Query<BlogDataModel>(query).ToList();
 
-            Console.WriteLine("Connection closing...");
-            connection.Close();
-            Console.WriteLine("Connection closed.");
-
-            foreach (DataRow row in dt.Rows)
+            foreach (var item in lst)
             {
-                Console.WriteLine(row["Blog_Id"]);
-                Console.WriteLine(row["Blog_Title"]);
-                Console.WriteLine(row["Blog_Author"]);
-                Console.WriteLine(row["Blog_Content"]);
+                Console.WriteLine(item.Blog_Id);
+                Console.WriteLine(item.Blog_Title);
+                Console.WriteLine(item.Blog_Author);
+                Console.WriteLine(item.Blog_Content);
             }
+
+            #endregion
         }
-        #endregion
 
         #region Edit
         private void Edit(int id)
         {
-            SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
-            connection.Open();
-
-            string query = "select * from tbl_blog where Blog_Id = @Blog_Id;";
-            SqlCommand cmd = new SqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("@Blog_Id", id);
-            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-
-            connection.Close();
-
-            if (dt.Rows.Count == 0)
+            BlogDataModel blog = new BlogDataModel()
             {
-                Console.WriteLine("No data found.");
-                return;
-            }
+                Blog_Id = id,
+            };
 
-            DataRow row = dt.Rows[0];
-            Console.WriteLine(row["Blog_Id"]);
-            Console.WriteLine(row["Blog_Title"]);
-            Console.WriteLine(row["Blog_Author"]);
-            Console.WriteLine(row["Blog_Content"]);
+            string query = "select * from tbl_blog where Blog_Id = @Blog_Id";
+            IDbConnection db = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
+            //List<dynamic> lst = db.Query(query).ToList();
+            List<BlogDataModel> lst = db.Query<BlogDataModel>(query, blog).ToList();
+
+            foreach (var item in lst)
+            {
+                Console.WriteLine(item.Blog_Id);
+                Console.WriteLine(item.Blog_Title);
+                Console.WriteLine(item.Blog_Author);
+                Console.WriteLine(item.Blog_Content);
+            }
         }
         #endregion
 
-        #region Create
         private void Create(string title, string author, string content)
         {
+            #region Create
+
             SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
             connection.Open();
+
 
             string query = @"INSERT INTO [dbo].[Tbl_Blog]
                            ([Blog_Title]
@@ -116,13 +106,12 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
             string message = result > 0 ? "Saving Successful." : "Saving Failed.";
             Console.WriteLine(message);
 
+            #endregion
         }
-        #endregion
 
         #region Update
         private void Update(int id, string title, string author, string content)
         {
-            
             SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
             connection.Open();
 
@@ -149,7 +138,7 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
         #region Delete
         private void Delete(int id)
         {
-            
+
             SqlConnection connection = new SqlConnection(sqlConnectionStringBuilder.ConnectionString);
             connection.Open();
             string query = @"DELETE FROM [dbo].[Tbl_Blog] WHERE Blog_Id = @Blog_Id";
@@ -159,7 +148,7 @@ namespace AKMDotNetCoreConsoleApp.AKMDotNetCoreExamples
             connection.Close();
             string message = result > 0 ? "Deleting successfully!" : "Deleting Failed!";
             Console.WriteLine(message);
-            
+
         }
         #endregion
     }
