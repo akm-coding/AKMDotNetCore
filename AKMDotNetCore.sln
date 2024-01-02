@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AKMDotNetCore.ConsoleApp", "AKMDotNetCoreConsoleApp\AKMDotNetCore.ConsoleApp.csproj", "{C0A4C267-F5BF-494C-8AC3-478E0707C36B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AKMDotNetCore.RestApi", "AKMDotNetCore.RestApi\AKMDotNetCore.RestApi.csproj", "{BFC65B96-60D5-4A7D-BB21-5D6CB2A01E5B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AKMDotNetCore.MinimalApi", "AKMDotNetCore.MinimalApi\AKMDotNetCore.MinimalApi.csproj", "{5C1E7876-5C5C-46E4-9162-3C5625C942DB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AKMDotNetCore.MvcApp", "AKMDotNetCore.MvcApp\AKMDotNetCore.MvcApp.csproj", "{A48452DB-C633-4C65-8604-94927CF78895}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AKMDotNetCore.ConsoleApp", "AKMDotNetCore.ConsoleApp\AKMDotNetCore.ConsoleApp.csproj", "{4BB5E0A5-3FF3-4F9D-AE4B-02C093C96242}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AKMDotNetCore.ThemeMvcApp", "AKMDotNetCore.ThemeMvcApp\AKMDotNetCore.ThemeMvcApp.csproj", "{A9A00688-D6AB-4FC8-9FB6-4AC2405308A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C0A4C267-F5BF-494C-8AC3-478E0707C36B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C0A4C267-F5BF-494C-8AC3-478E0707C36B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C0A4C267-F5BF-494C-8AC3-478E0707C36B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C0A4C267-F5BF-494C-8AC3-478E0707C36B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BFC65B96-60D5-4A7D-BB21-5D6CB2A01E5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BFC65B96-60D5-4A7D-BB21-5D6CB2A01E5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFC65B96-60D5-4A7D-BB21-5D6CB2A01E5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +31,14 @@ Global
 		{A48452DB-C633-4C65-8604-94927CF78895}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A48452DB-C633-4C65-8604-94927CF78895}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A48452DB-C633-4C65-8604-94927CF78895}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BB5E0A5-3FF3-4F9D-AE4B-02C093C96242}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BB5E0A5-3FF3-4F9D-AE4B-02C093C96242}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BB5E0A5-3FF3-4F9D-AE4B-02C093C96242}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BB5E0A5-3FF3-4F9D-AE4B-02C093C96242}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9A00688-D6AB-4FC8-9FB6-4AC2405308A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9A00688-D6AB-4FC8-9FB6-4AC2405308A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9A00688-D6AB-4FC8-9FB6-4AC2405308A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9A00688-D6AB-4FC8-9FB6-4AC2405308A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
