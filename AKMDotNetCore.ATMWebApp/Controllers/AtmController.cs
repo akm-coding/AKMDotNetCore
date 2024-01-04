@@ -1,8 +1,8 @@
 ﻿using AKMDotNetCore.ATMWebApp;
 using AKMDotNetCore.ATMWebApp.Models;
-using AKMDotNetCore.MvcApp;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Net.NetworkInformation;
 using System.Reflection.Metadata;
 
@@ -10,16 +10,18 @@ namespace AKMDotNetCore.MvcApp
 {
     public class AtmController : Controller
     {
-		private readonly AppDbContext _context;
+        private readonly AppDbContext _context;
 
-		public AtmController(AppDbContext context)
-		{
-			_context = context;
-		}
+        public AtmController(AppDbContext context)
+        {
+            _context = context;
+        }
 
-		[ActionName("Index")]
+        [ActionName("Index")]
         public IActionResult AtmIndex()
         {
+            var str = HttpContext.Session.GetString("LoginData");
+            if (str is not null) return Redirect("/atm/transaction");
             return View("AtmIndex");
         }
 
@@ -31,10 +33,29 @@ namespace AKMDotNetCore.MvcApp
 
             if (card is null)
             {
-                TempData["Message"] = "Card not recognized. Please try again!";
+                TempData["Message"] = "Card not found. Please try again!";
                 TempData["IsSuccess"] = false;
             }
+
+            HttpContext.Session.SetString("LoginData", JsonConvert.SerializeObject(card));
             return Json(card);
+        }
+
+        [ActionName("Transaction")]
+        public async Task<IActionResult> AtmTransaction()
+        {
+            var str = HttpContext.Session.GetString("LoginData");
+            if (str is null) return Redirect("/atm");
+
+            UserModel model = JsonConvert.DeserializeObject<UserModel>(str)!;
+
+            var card = await _context.User.AsNoTracking().FirstOrDefaultAsync(x => x.Id == model.Id);
+            if (card is null)
+            {
+                TempData["Message"] = "User ID not found.";
+                TempData["IsSuccess"] = false;
+            }
+            return View("AtmTransaction", card);
         }
 
         [ActionName("Create")]
@@ -47,32 +68,20 @@ namespace AKMDotNetCore.MvcApp
         [ActionName("Save")]
         public async Task<IActionResult> AtmSave(UserModel reqModel)
         {
-            object value = await _context.User.AddAsync(reqModel);
+            await _context.User.AddAsync(reqModel);
             int result = await _context.SaveChangesAsync();
 
             string message = result > 0 ? "Register Successful." : "Register Failed.";
-          
+
             MessageModel model = new MessageModel(result > 0, message);
             return Json(model);
-        }
-
-        [ActionName("Transaction")]
-        public async Task<IActionResult> AtmTransaction(int id)
-        {
-            var card = await _context.User.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-            if (card is null)
-            {
-                TempData["Message"] = "User ID not found.";
-                TempData["IsSuccess"] = false;
-            }
-            return View("AtmTransaction",card);
         }
 
         [ActionName("Balance")]
         public async Task<IActionResult> AtmBalance(int id)
         {
             var card = await _context.User.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-           
+
             return View("AtmBalance", card);
         }
 
@@ -80,8 +89,7 @@ namespace AKMDotNetCore.MvcApp
         public async Task<IActionResult> AtmDeposit(int id)
         {
             var card = await _context.User.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-
-            return View("AtmDeposit",card);
+            return View("AtmDeposit", card);
         }
 
         [HttpPost]
@@ -96,7 +104,7 @@ namespace AKMDotNetCore.MvcApp
                 return Json(card);
             }
 
-            if(reqModel.Balance <= 0)
+            if (reqModel.Balance <= 0)
             {
                 MessageModel model1 = new MessageModel(false, "Please fill deposit amount");
                 return Json(model1);
@@ -114,8 +122,7 @@ namespace AKMDotNetCore.MvcApp
         public async Task<IActionResult> AtmWithdraw(int id)
         {
             var card = await _context.User.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-
-            return View("AtmWithdraw",card);
+            return View("AtmWithdraw", card);
         }
 
         [HttpPost]
@@ -148,13 +155,12 @@ namespace AKMDotNetCore.MvcApp
         public async Task<IActionResult> AtmChangePin(int id)
         {
             var card = await _context.User.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-
             return View("AtmChangePin", card);
         }
 
         [HttpPost]
         [ActionName("ChangePin")]
-        public async Task<IActionResult> AtmChangePin(int id , UserModel reqModel , int newpin, int confirmpin)
+        public async Task<IActionResult> AtmChangePin(int id, UserModel reqModel, int newpin, int confirmpin)
         {
             var card = await _context.User.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
@@ -179,7 +185,7 @@ namespace AKMDotNetCore.MvcApp
                     }
                     else
                     {
-                        MessageModel model1 = new MessageModel(false,"Not match PIN numbers");
+                        MessageModel model1 = new MessageModel(false, "Not match PIN numbers");
                         return Json(model1);
                     }
                 }
