@@ -1,0 +1,32 @@
+﻿@model UserModel
+
+@{
+    ViewData["Title"] = "Balance";
+}
+
+<div class="container-fluid d-flex justify-content-center align-items-center">
+    <div class="row">
+        <div class="p-3 mb-2 bg-secondary text-white">Remaining Balance Amount</div>
+        <div class="col-md-12">
+            <div class="col-6">
+                <label for="txtName" class="form-label">User name</label>
+                <input type="text" class="form-control" value="@Model.UserName" id="txtName" readonly>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="col-6">
+                <label for="txtCard" class="form-label">Card Number</label>
+                <input type="text" class="form-control" value="@Model.CardNumber" id="txtCard" readonly>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="col-6">
+                <label for="txtBalance" class="form-label">Balance</label>
+                <input type="text" class="form-control" value="@Model.Balance" id="txtBalance" readonly>
+            </div>
+        </div>
+        <div class="btn-container" style="margin-top:1.5rem;">
+            <a href="/atm/transaction?id=@Model.Id" class="btn btn-info mr-2" id="btnCancel">Back</a>
+        </div>
+    </div>
+</div>

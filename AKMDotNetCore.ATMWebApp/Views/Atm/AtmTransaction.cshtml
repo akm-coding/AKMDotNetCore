@@ -1,0 +1,43 @@
+﻿@model UserModel
+
+@{
+    ViewData["Title"] = "Transaction";
+    string message = null;
+    bool isSuccess = false;
+    if (TempData["Message"] != null)
+    {
+        message = TempData["Message"].ToString();
+        isSuccess = Convert.ToBoolean(TempData["IsSuccess"]);
+    }
+    if (message is not null)
+    {
+        <div class="mx-auto col-14 col-md-10 col-lg-6">
+            <div class="form-group">
+                <div class="alert alert-@(isSuccess?"success" :"danger") role="alert">
+                    @message
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@if (Model != null)
+{
+    <div class="p-3 mb-4 bg-secondary text-white">Please select your transaction</div>
+    <div class="container-fluid d-flex justify-content-center">
+        <div class="row">
+            <div class="d-grid gap-2 col-4">
+                <a href="/atm/balance?id=@Model.Id" id="btnBalance" class="btn btn-info btn-lg">Balance</a>
+            </div>
+            <div class="d-grid gap-2 col-4">
+                <a href="/atm/deposit?id=@Model.Id" id="btnDeposit" class="btn btn-success btn-lg">Deposit</a>
+            </div>
+            <div class="d-grid gap-2 col-4">
+                <a href="/atm/withdraw?id=@Model.Id" id="btnWithdraw" class="btn btn-warning btn-lg">Withdraw</a>
+            </div>
+            <div class="d-grid gap-2 col-4">
+                <a href="/atm/changepin?id=@Model.Id" id="btnChangePin" class="btn btn-danger btn-lg">Change PIN</a>
+            </div>
+        </div>
+    </div>
+}

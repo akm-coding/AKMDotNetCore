@@ -1,0 +1,92 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+    string message = null;
+    bool isSuccess = false;
+    if(TempData["Message"] != null)
+    {
+        message = TempData["Message"].ToString();
+        isSuccess = Convert.ToBoolean(TempData["IsSuccess"]);
+    }
+    if (message is not null)
+    {
+        <div class="mx-auto col-14 col-md-10 col-lg-6">
+            <div class="form-group">
+                <div class="alert alert-@(isSuccess?"success" :"danger") role="alert">
+                @message
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<section class="p-3 p-md-4 p-xl-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-6 bsb-tpl-bg-lotion">
+                <div class="p-3 p-md-4 p-xl-5">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-5">
+                                <h3>Log in</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <form action="#!">
+                        <div class="row gy-3 gy-md-4 overflow-hidden">
+                            <div class="col-12">
+                                <label class="form-label">Card Number <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="txtCard" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="txtPin">PIN</label>
+                                <input class="form-control" type="text" id="txtPin">
+                            </div>
+                            <div class="col-12">
+                                <div class="d-grid">
+                                    <button class="btn bsb-btn-xl btn-primary" type="submit">Log in</button>
+                                </div>
+                                <label class="form-label">Have no account yet?<a href="/atm/create">&nbsp;Register</a></label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+	<script>
+		$("#btnLogin").click(function (e) {
+			e.preventDefault();
+
+			var l = Ladda.create(this);
+			l.start();
+
+			var _reqModel = {
+				CardNumber: $("#txtCard").val(),
+				Pin: $("#txtPin").val()
+			};
+
+			$.ajax({
+				url: '/atm/login',
+				type: 'POST',
+				data: {
+					reqModel : _reqModel
+				},
+                success: function (card) {
+                    l.stop();
+                    if (card !=null) {
+                        location.href = "/atm/transaction?id=" + card.id;
+                    }else{
+                        location.href ="/atm";
+                    }
+				},
+				error: function (request, status, error) {
+					console.log({ request, status, error });
+				}
+			});
+		})
+	</script>
+}

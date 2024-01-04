@@ -1,0 +1,83 @@
+﻿@model UserModel
+
+@{
+    ViewData["Title"] = "Deposit";
+    string message = null;
+    bool isSuccess = false;
+    if (TempData["Message"] != null)
+    {
+        message = TempData["Message"].ToString();
+        isSuccess = Convert.ToBoolean(TempData["IsSuccess"]);
+    }
+    if (message is not null)
+    {
+        <div class="mx-auto col-14 col-md-10 col-lg-6">
+            <div class="form-group">
+                <div class="alert alert-@(isSuccess?"success" :"danger") role="alert">
+                    @message
+                </div>
+            </div>
+        </div>
+    }
+}
+@if (Model != null)
+{
+    <div class="container-fluid d-flex justify-content-center align-items-center">
+        <div class="row">
+            <div class="p-3 mb-2 bg-secondary text-white">Deposit Amount</div>
+            <div class="col-md-12">
+                <div class="col-6">
+                    <label for="txtName" class="form-label">Name</label>
+                    <input type="text" class="form-control" value="@Model.UserName" id="txtName" readonly>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-6">
+                    <label for="txtCard" class="form-label">Card Number</label>
+                    <input type="text" class="form-control" value="@Model.CardNumber" id="txtCard" readonly>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-6">
+                    <label for="txtBalance" class="form-label">How much money would you like to deposit</label>
+                    <input type="text" class="form-control" id="txtBalance">
+                </div>
+            </div>
+            <div class="btn-container" style="margin-top:1.5rem;">
+                <a href="/atm/transaction?id=@Model.Id" class="btn btn-secondary mr-2" id="btnCancel">Cancel</a>
+                <button type="button" class="btn btn-success" id="btnAdd">Add</button>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts{
+    <script>
+        $("#btnAdd").click(function () {
+
+            var _id = @Model.Id;
+            var _reqModel = {
+                Balance : $("#txtBalance").val()
+            }
+
+            $.ajax({
+                url: '/atm/deposit?id=' + _id,
+                type: 'POST',
+                data: {
+                    id : _id,
+                    reqModel: _reqModel
+                },
+                success: function (data) {
+                    if (data != null) {
+                        showMessage(data, "/atm/transaction?id=" + _id);
+                    } else {
+                        location.href = "/atm/deposit?id=" + _id;
+                    }
+                },
+                error: function (request, status, error) {
+                    console.log({ request, status, error });
+                }
+            });
+        })
+    </script>
+}
