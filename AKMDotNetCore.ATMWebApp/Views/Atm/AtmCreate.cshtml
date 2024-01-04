@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Register Page";
+}
+
+<div class="container-fluid d-flex justify-content-center align-items-center">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-6">
+                <label for="txtName" class="form-label">Name</label>
+                <input type="text" class="form-control" id="txtName">
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="col-6">
+                <label for="txtCard" class="form-label">Card Number</label>
+                <input type="text" class="form-control" id="txtCard">
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="col-6">
+                <label for="txtPin" class="form-label">PIN</label>
+                <input type="text" class="form-control" id="txtPin">
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="col-6">
+                <label for="txtBalance" class="form-label">Balance</label>
+                <input type="text" class="form-control" id="txtBalance">
+            </div>
+        </div>
+        <div class="btn-container" style="margin-top:1.5rem;">
+            <a href="/atm/index" class="btn btn-secondary mr-2" id="btnCancel">Cancel</a>
+            <button type="button" class="btn btn-success ladda-button" data-style="expand-left" id="btnSave">
+	            <span class="ladda-label">Register</span>
+            </button>
+        </div>
+    </div>
+</div>
+                    
+@section scripts{
+<script>
+	$("#btnSave").click(function (e) {
+		e.preventDefault();
+
+		var l = Ladda.create(this);
+		l.start();
+
+		var _reqModel = {
+			Name: $("#txtName").val(),
+			CardNumber: $("#txtCard").val(),
+			Pin: $("#txtPin").val(),
+            Balance: $("#txtBalance").val()
+		};
+
+		$.ajax({
+			url: '/atm/save',
+			type: 'POST',
+			data: {
+				reqModel : _reqModel
+			},
+			success: function (data) {
+				l.stop();
+				showMessage(data,"/atm");
+			},
+			error: function (request, status, error) {
+				console.log({ request, status, error });
+			}
+		});
+	})
+</script>
+}

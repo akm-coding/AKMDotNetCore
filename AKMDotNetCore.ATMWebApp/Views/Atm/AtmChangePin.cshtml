@@ -1,0 +1,85 @@
+﻿@model UserModel
+
+@{
+    ViewData["Title"] = "Change Pin";
+    string message = null;
+    bool isSuccess = false;
+    if (TempData["Message"] != null)
+    {
+        message = TempData["Message"].ToString();
+        isSuccess = Convert.ToBoolean(TempData["IsSuccess"]);
+    }
+    if (message is not null)
+    {
+    <div class="mx-auto col-14 col-md-10 col-lg-6">
+        <div class="form-group">
+            <div class="alert alert-@(isSuccess?"success" :"danger") role="alert">
+                @message
+            </div>
+        </div>
+    </div>
+    }
+}
+
+<div class="container-fluid d-flex justify-content-center align-items-center">
+    <div class="row">
+        <div class="p-3 mb-2 bg-secondary text-white">Change Password</div>
+        <div class="col-md-12">
+            <div class="col-6">
+                <label for="txtName" class="form-label">Enter pin number</label>
+                <input type="text" class="form-control" id="txtCurrentpin">
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="col-6">
+                <label for="txtCard" class="form-label">Enter new pin number</label>
+                <input type="text" class="form-control" id="txtNewpin">
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="col-6">
+                <label for="txtBalance" class="form-label">Confirm new pin number</label>
+                <input type="text" class="form-control" id="txtConfirm">
+            </div>
+        </div>
+        <div class="btn-container" style="margin-top:1.5rem;">
+            <a href="/atm/transaction?id=@Model.Id" class="btn btn-secondary mr-2" id="btnCancel">Cancel</a>
+            <button type="button" class="btn btn-success" id="btnSave">Save</button>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $("#btnSave").click(function () {
+
+            var _id = @Model.Id;
+            var _newPin = $("#txtNewpin").val();
+            var _confirmPin = $("#txtConfirm").val();
+            var _reqModel = {
+                Pin : $("#txtCurrentpin").val()
+            }
+
+            $.ajax({
+                url: '/atm/changepin?id=' + _id,
+                type: 'POST',
+                data: {
+                    id: _id,
+                    reqModel: _reqModel,
+                    newpin : _newPin,
+                    confirmpin : _confirmPin
+                },
+                success: function (card) {
+                    if (card != null) {
+                        showMessage(card, "/atm/transaction?id=" + _id);
+                    } else {
+                        location.href = "/atm/changepin?id=" + _id;
+                    }
+                },
+                error: function (request, status, error) {
+                    console.log({ request, status, error });
+                }
+            });
+        })
+    </script>
+}
