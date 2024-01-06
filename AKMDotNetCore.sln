@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AKMDotNetCore.ConsoleApp", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AKMDotNetCore.ThemeMvcApp", "AKMDotNetCore.ThemeMvcApp\AKMDotNetCore.ThemeMvcApp.csproj", "{A9A00688-D6AB-4FC8-9FB6-4AC2405308A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AKMDotNetCore.ATMWebApp", "AKMDotNetCore.ATMWebApp\AKMDotNetCore.ATMWebApp.csproj", "{60E72E51-D967-4787-9D83-CDD1EA8AA6B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AKMDotNetCore.ATMWebApp", "AKMDotNetCore.ATMWebApp\AKMDotNetCore.ATMWebApp.csproj", "{60E72E51-D967-4787-9D83-CDD1EA8AA6B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AKMDotNetCore.LoginWebApp", "AKMDotNetCore.LoginWebApp\AKMDotNetCore.LoginWebApp.csproj", "{E652DD49-6381-4654-AE3B-95BCF0317C12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{60E72E51-D967-4787-9D83-CDD1EA8AA6B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60E72E51-D967-4787-9D83-CDD1EA8AA6B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60E72E51-D967-4787-9D83-CDD1EA8AA6B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E652DD49-6381-4654-AE3B-95BCF0317C12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E652DD49-6381-4654-AE3B-95BCF0317C12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E652DD49-6381-4654-AE3B-95BCF0317C12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E652DD49-6381-4654-AE3B-95BCF0317C12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
