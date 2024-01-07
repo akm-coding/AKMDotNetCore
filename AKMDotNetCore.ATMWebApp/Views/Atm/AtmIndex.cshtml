@@ -28,37 +28,39 @@
                     <img class="img-fluid rounded mx-auto my-4" loading="lazy" src="https://th.bing.com/th/id/OIP.6lzUX0zPsQ6gZUOXbYpW7AHaIO?w=187&h=208&c=7&r=0&o=5&dpr=1.3&pid=1.7" width="245" height="80" alt="Logo">
                 </div>
             </div>
-                <div class="col-12 col-md-6 bsb-tpl-bg-lotion">
-                    <div class="p-3 p-md-4 p-xl-5">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="mb-5">
-                                    <h3>Log in</h3>
-                                </div>
+            <div class="col-12 col-md-6 bsb-tpl-bg-lotion">
+                <div class="p-3 p-md-4 p-xl-5">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-5">
+                                <h3>Log in</h3>
                             </div>
                         </div>
-                        <form action="#!">
-                            <div class="row gy-3 gy-md-4 overflow-hidden">
-                                <div class="col-12">
-                                    <label class="form-label">Card Number <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="txtCard" required>
-                                </div>
-                                <div class="col-12">
-                                <label class="txtPin">PIN <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="txtPin">
-                                </div>
-                                <div class="col-12">
-                                    <div class="d-grid">
-                                        <button class="btn bsb-btn-xl btn-primary" type="submit">Log in</button>
-                                    </div>
-                                    <label class="form-label">Have no account yet?<a href="/atm/create">&nbsp;Register</a></label>
-                                </div>
-                            </div>
-                        </form>
                     </div>
+                    <form action="#!">
+                        <div class="row gy-3 gy-md-4 overflow-hidden">
+                            <div class="col-12">
+                                <label class="txtCard">Card Number <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="txtCard" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="txtPin">PIN <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="txtPin">
+                            </div>
+                            <div class="col-12">
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-primary btn-customized mt-4 ladda-button" data-style="expand-left" id="btnLogin">
+                                        <span class="ladda-label">Login</span>
+                                    </button>
+                                </div>
+                                <label class="form-label">Have no account yet?<a href="/atm/create">&nbsp;Register</a></label>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
 </section>
 
 @section scripts{
