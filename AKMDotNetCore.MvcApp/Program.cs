@@ -1,5 +1,8 @@
 using AKMDotNetCore.MvcApp.EFDbContext;
+using AKMDotNetCore.MvcApp.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Refit;
+using RestSharp;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 },
 ServiceLifetime.Transient,
 ServiceLifetime.Transient);
+
+#region Refit
+
+
+#endregion
 
 var app = builder.Build();
 
