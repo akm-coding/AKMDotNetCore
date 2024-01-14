@@ -10,13 +10,33 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection"));
+    string? connectionString = builder.Configuration.GetConnectionString("DbConnection");
+    options.UseSqlServer(connectionString);
 },
 ServiceLifetime.Transient,
 ServiceLifetime.Transient);
 
 #region Refit
 
+builder.Services
+    .AddRefitClient<IBlogApi>()
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration.GetSection("ApiUrl").Value!));
+
+#endregion
+
+#region HttpClient
+
+//builder.Services.AddScoped<HttpClient>();
+builder.Services.AddScoped(x => new HttpClient
+{
+    BaseAddress = new Uri(builder.Configuration.GetSection("ApiUrl").Value!)
+});
+
+#endregion
+
+#region RestClient
+
+builder.Services.AddScoped(x => new RestClient(builder.Configuration.GetSection("ApiUrl").Value!));
 
 #endregion
 
