@@ -29,7 +29,7 @@ namespace AKMDotNetCore.RestApi.Controllers
                     Message = "Success",
                     Data = lst
                 };
-                return Ok(lst);
+                return Ok(model);
             }
             catch (Exception ex)
             {

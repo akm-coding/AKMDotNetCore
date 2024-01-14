@@ -8,14 +8,28 @@ using System.Threading.Tasks;
 
 namespace AKMDotNetCore.MvcApp.Models
 {
-    [Table("Tbl_Blog")]
+    [Table("Tbl_Blog")] // Define Table Name
     public class BlogDataModel
     {
-        [Key]
-        public int Blog_Id { get; set; }
+        [Key] //Define Primary Key 
+        public int Blog_Id { get; set; } 
         public string Blog_Title { get; set; }
         public string Blog_Author { get; set; }
         public string Blog_Content { get; set; }
+    }
+
+    public class BlogResponseModel
+    {
+        public bool IsSuccess { get; set; }
+        public string Message { get; set; }
+        public BlogDataModel Data { get; set; }
+    }
+
+    public class BlogListResponseModel
+    {
+        public bool IsSuccess { get; set; }
+        public string Message { get; set; }
+        public List<BlogDataModel> Data { get; set; }
     }
 
     public class BlogDataResponseModel
